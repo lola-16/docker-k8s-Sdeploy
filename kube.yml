@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dockercompose
+spec:
+  replicas: 1  # It's good practice to set replicas for your deployment
+  selector:
+    matchLabels:
+      app: dockercompose
+  template:
+    metadata:
+      labels:
+        app: dockercompose
+    spec:
+      containers:
+      - name: dockercompose
+        image: senior2026/hello 
+        imagePullPolicy: IfNotPresent  # Change this to 'IfNotPresent' or 'Always'
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: dockercompose
+  labels:
+    app: dockercompose
+spec:
+  selector:
+    app: dockercompose
+  ports:
+  - port: 80
+    targetPort: 80
+  type: LoadBalancer
